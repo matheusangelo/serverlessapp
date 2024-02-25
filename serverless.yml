@@ -1,19 +1,21 @@
-service: mylambda
-plugins:
-  - serverless-localstack
+service: api
 
-custom:
-  localstack:
-    debug: true
-    stages:
-     - local
-     - dev
-    endpointFile: localstack_endpoints.json
-    
+plugins:
+  - serverless-offline
+ 
 provider:
   name: aws
-  runtime: nodejs12.x
-
+  runtime: python3.11
 functions:
-  hello:
-    handler: handler.hello
+  create:
+    handler: handler.create
+    events:
+      - http:
+          path: s3
+          method: post
+  get:
+    handler: handler.get
+    events:
+      - http:
+          path: s3
+          method: get
