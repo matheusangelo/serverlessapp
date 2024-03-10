@@ -1,11 +1,42 @@
 service: api
 
 plugins:
+  - serverless-s3-local
+  - serverless-offline-ssm
+  - serverless-dynamodb-local
   - serverless-offline
- 
+
+custom:
+  s3:
+    host: localhost
+    directory: /tmp
+    port: 4569
+  serverless-offline-ssm:
+    stages:
+      - local
+    ssm:
+      'agp/vpn': 'banana'
+  dynamodb:
+    stages:
+      - local
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+      noStart: true
+  endpoints:
+    dynamodb-url: 'http://localhost:8000'
 provider:
+  stage: local
   name: aws
   runtime: python3.11
+  environment:
+    MY_ENV: ${ssm:agp/vpn}
+
 functions:
   create:
     handler: handler.create

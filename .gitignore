@@ -4,3 +4,5 @@ package-lock.json
 .localstack
 jspm_packages
 __pycache__
+buckets
+docker
